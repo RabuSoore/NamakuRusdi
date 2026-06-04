@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Informatika X - Tantangan Ultimate | 35 Soal Sulit</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Poppins', 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at 10% 20%, #0b1120, #030614);
+            min-height: 100vh;
+            padding: 1.5rem;
+        }
+
+        /* main container */
+        .app-wrapper {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            align-items: flex-start;
+        }
+
+        /* kuis area (kiri) */
+        .quiz-section {
+            flex: 3;
+            min-width: 280px;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(12px);
+            border-radius: 2.5rem;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            box-shadow: 0 25px 40px -12px rgba(0, 0, 0, 0.5);
+            padding: 1.8rem;
+            transition: all 0.2s;
+        }
+
+        /* header */
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid #2d3a5e;
+        }
+        h1 {
+            font-size: 1.8rem;
+            background: linear-gradient(120deg, #a5f3fc, #c084fc, #facc15);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
+        }
+        .badge-score {
+            background: #0a0f1e;
+            padding: 0.4rem 1.2rem;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #fbbf24;
+            border: 1px solid #facc1540;
+            backdrop-filter: blur(4px);
+        }
+
+        /* input nama */
+        .nama-panel {
+            background: #1e293bb3;
+            border-radius: 1.8rem;
+            padding: 1rem 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-end;
+            gap: 1rem;
+            border-left: 5px solid #3b82f6;
+        }
+        .nama-panel label {
+            font-weight: 600;
+            color: #b9c7f0;
+        }
+        .nama-panel input {
+            background: #0f172a;
+            border: 1px solid #334155;
+            padding: 0.7rem 1.2rem;
+            border-radius: 3rem;
+            color: white;
+            font-size: 1rem;
+            width: 230px;
+            outline: none;
+            transition: 0.2s;
+        }
+        .nama-panel input:focus {
+            border-color: #38bdf8;
+            box-shadow: 0 0 0 2px #38bdf840;
+        }
+        .btn-apply {
+            background: linear-gradient(95deg, #3b82f6, #6366f1);
+            border: none;
+            padding: 0.7rem 1.6rem;
+            border-radius: 3rem;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-apply:hover {
+            transform: scale(1.02);
+            background: linear-gradient(95deg, #2563eb, #4f46e5);
+        }
+
+        /* card soal per halaman */
+        .question-page {
+            background: #111827cc;
+            border-radius: 2rem;
+            padding: 1.8rem;
+            margin: 1rem 0 1.5rem;
+            border: 1px solid #2d3a5e;
+            box-shadow: 0 12px 20px -10px black;
+        }
+        .q-counter {
+            font-size: 0.85rem;
+            background: #0f172a;
+            display: inline-block;
+            padding: 0.2rem 1rem;
+            border-radius: 30px;
+            margin-bottom: 1rem;
+            color: #94a3b8;
+        }
+        .question-text {
+            font-size: 1.4rem;
+            font-weight: 700;
+            line-height: 1.4;
+            margin: 1rem 0 1.8rem 0;
+            color: #f1f5f9;
+        }
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .opt-item {
+            background: #1e293b;
+            border-radius: 1.2rem;
+            padding: 0.9rem 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+            transition: 0.15s;
+            border: 1px solid #334155;
+        }
+        .opt-item:hover {
+            background: #2d3a5e;
+            transform: translateX(5px);
+        }
+        .opt-item.selected {
+            background: #2563eb20;
+            border: 1px solid #3b82f6;
+            box-shadow: 0 0 8px #3b82f660;
+        }
+        .opt-radio {
+            accent-color: #3b82f6;
+            width: 1.2rem;
+            height: 1.2rem;
+            cursor: pointer;
+        }
+        .opt-letter {
+            font-weight: 800;
+            background: #0f172a;
+            width: 32px;
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 40px;
+            color: #7dd3fc;
+        }
+        .opt-text {
+            font-size: 1rem;
+            font-weight: 500;
+            flex: 1;
+        }
+
+        /* navigasi */
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .nav-btn {
+            background: #1f2a44;
+            border: none;
+            padding: 0.7rem 1.8rem;
+            border-radius: 3rem;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 1rem;
+        }
+        .nav-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        .nav-btn.primary {
+            background: linear-gradient(95deg, #10b981, #059669);
+        }
+        .submit-final {
+            background: linear-gradient(95deg, #f97316, #ea580c);
+            box-shadow: 0 4px 14px #ea580c60;
+        }
+        .progress-bar {
+            background: #1e293b;
+            border-radius: 40px;
+            height: 8px;
+            margin: 0.8rem 0 1.2rem;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background: linear-gradient(90deg, #3b82f6, #c084fc);
+            width: 0%;
+            height: 100%;
+            border-radius: 40px;
+            transition: width 0.2s ease;
+        }
+
+        /* leaderboard panel (kanan) */
+        .leaderboard-panel {
+            flex: 1.2;
+            min-width: 270px;
+            background: rgba(10, 16, 29, 0.85);
+            backdrop-filter: blur(16px);
+            border-radius: 2rem;
+            padding: 1.5rem;
+            border: 1px solid #facc1540;
+            position: sticky;
+            top: 1.5rem;
+            box-shadow: 0 20px 30px -10px black;
+        }
+        .leaderboard-panel h2 {
+            font-size: 1.8rem;
+            text-align: center;
+            margin-bottom: 1.2rem;
+            background: linear-gradient(135deg, #facc15, #f97316);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .leaderboard-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .leaderboard-list li {
+            background: #111827;
+            margin: 0.6rem 0;
+            padding: 0.7rem 1rem;
+            border-radius: 3rem;
+            display: flex;
+            justify-content: space-between;
+            font-weight: 500;
+            border-left: 4px solid #facc15;
+            transition: 0.1s;
+        }
+        .rank-name {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 150px;
+        }
+        .rank-score {
+            background: #00000055;
+            padding: 2px 12px;
+            border-radius: 60px;
+            font-family: monospace;
+            font-weight: bold;
+        }
+        .empty-leader {
+            text-align: center;
+            color: #94a3b8;
+            padding: 1rem;
+        }
+        .info-message {
+            margin-top: 1.2rem;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #7c8aae;
+        }
+
+        @media (max-width: 800px) {
+            body { padding: 1rem; }
+            .app-wrapper { flex-direction: column; }
+            .leaderboard-panel { position: static; margin-top: 0; }
+            .question-text { font-size: 1.2rem; }
+        }
+        button {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="app-wrapper">
+    <!-- Area kuis utama -->
+    <div class="quiz-section">
+        <div class="quiz-header">
+            <h1>⚡ INFORMATIKA X<br><span style="font-size: 0.8rem;">35 soal · sangat sulit</span></h1>
+            <div class="badge-score" id="previewScore">📊 Skor: 0/35</div>
+        </div>
+
+        <!-- input nama -->
+        <div class="nama-panel">
+            <label>🏅 Masuk ke leaderboard:</label>
+            <input type="text" id="playerName" placeholder="Nama panggilan" maxlength="20" autocomplete="off">
+            <button class="btn-apply" id="applyNameBtn">Gunakan nama</button>
+            <span style="font-size:0.7rem; color:#7e8aa2;">*Nama akan tersimpan saat kirim jawaban</span>
+        </div>
+
+        <!-- progress bar dan halaman soal -->
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <!-- container untuk halaman aktif (1 soal) -->
+        <div id="questionPageContainer"></div>
+
+        <!-- navigasi halaman -->
+        <div class="nav-buttons">
+            <button class="nav-btn" id="prevBtn" disabled>◀ Sebelumnya</button>
+            <span id="pageIndicator" style="background:#0f172a; padding:0.4rem 1rem; border-radius:30px;">Halaman 1 / 35</span>
+            <button class="nav-btn" id="nextBtn">Selanjutnya ▶</button>
+        </div>
+        <div style="margin-top: 1.5rem; text-align: center;">
+            <button class="nav-btn primary submit-final" id="finalSubmitBtn">📌 KIRIM JAWABAN & SIMPAN SKOR</button>
+        </div>
+        <div id="submitMessage" style="text-align: center; margin-top: 0.8rem; font-weight: 500;"></div>
+    </div>
+
+    <!-- Leaderboard panel (tanpa tombol reset) -->
+    <div class="leaderboard-panel">
+        <h2>🏆 TOP RANKING</h2>
+        <ul id="leaderboardList" class="leaderboard-list">
+            <li class="empty-leader">✨ Belum ada skor ✨</li>
+        </ul>
+        <div class="info-message">✅ Skor tertinggi muncul di sini</div>
+    </div>
+</div>
+
+<script>
+    // ================================
+    // 35 SOAL SANGAT SULIT (berdasarkan kisi-kisi)
+    // ================================
+    const QUESTIONS = [
+        { text: "Dalam topologi Mesh, jika terdapat 8 node dan ingin membangun koneksi full-mesh, berapa jumlah total link yang dibutuhkan?", options: ["28", "56", "16", "32"], correct: 0 },
+        { text: "Pada mekanisme Token Passing (IEEE 802.5), jika sebuah station yang memegang token tidak memiliki frame untuk dikirim, apa yang dilakukan station tersebut?", options: ["Langsung melepas token ke downstream neighbor", "Mengirim token kosong (null frame)", "Menunggu hingga timeout 10ms lalu meneruskan", "Memecah token menjadi dua bagian"], correct: 0 },
+        { text: "Manakah pernyataan yang PALING tepat tentang perbedaan CAN (Campus Area Network) dan LAN?", options: ["CAN memiliki delay propagasi lebih kecil dari LAN", "CAN menghubungkan beberapa LAN dalam area kampus (hingga beberapa km), tetapi lebih kecil dari MAN", "CAN hanya menggunakan topologi bus", "LAN menggunakan media fiber optic eksklusif"], correct: 1 },
+        { text: "Operator bitwise di C++: Jika x = 14 (1110 biner) dan y = 11 (1011 biner), berapakah hasil dari x & ~y ?", options: ["4", "2", "6", "12"], correct: 0 },
+        { text: "Dalam preprocessing data, tahapan mana yang mengubah data kategorikal menjadi numerik dan melakukan normalisasi secara bersamaan? (paling mendekati)", options: ["Data Cleaning", "Data Integration", "Data Transformation", "Data Reduction"], correct: 2 },
+        { text: "Pada Google Colab, fitur untuk mengimpor file dari komputer lokal secara langsung ke environment runtime (bukan mount drive) adalah dengan menggunakan menu?", options: ["Runtime > Run all", "File > Upload notebook", "Ikon folder samping kiri -> Upload", "Tools > Preferences"], correct: 2 },
+        { text: "Dalam struktur pseudocode, bagian JUDUL biasanya diawali dengan kata kunci apa dalam notasi algoritmik?", options: ["PROGRAM", "ALGORITMA", "DECLARE", "START"], correct: 0 },
+        { text: "Simbol flowchart berbentuk belah ketupat (diamond) merepresentasikan?", options: ["Proses input/output", "Kondisi percabangan / keputusan", "Proses aritmatika", "Terminal start/stop"], correct: 1 },
+        { text: "Apa output dari potongan kode C++ berikut: char c = 'A'; c = c ^ 32; cout << c; (asumsi ASCII)", options: ["A", "a", "!", "65"], correct: 1 },
+        { text: "Komputer generasi kedua (1956-1963) menggunakan komponen utama berupa?", options: ["Tabung vakum", "Transistor", "IC (Integrated Circuit)", "Mikroprosesor"], correct: 1 },
+        { text: "Dalam topologi hybrid yang menggabungkan star dan ring, kelemahan utama yang mungkin terjadi adalah?", options: ["Kegagalan satu node dapat melumpuhkan seluruh jaringan", "Kompleksitas perancangan dan biaya tinggi", "Kabel backbone tunggal rawan collision", "Token passing tidak dapat bekerja"], correct: 1 },
+        { text: "Operator logika dalam C++: ( (5 > 3) || (4 == 3) && !(2 < 1) ) akan bernilai?", options: ["true", "false", "1", "0"], correct: 0 },
+        { text: "Tahap preprocessing data: 'Reduction' bertujuan untuk?", options: ["Menghilangkan data duplikat", "Mengurangi volume data namun tetap mempertahankan integritas", "Menggabungkan dua dataset berbeda", "Mengubah tipe data menjadi numerik"], correct: 1 },
+        { text: "Menu Google Colab yang digunakan untuk mengubah tipe runtime menjadi GPU akselerator adalah?", options: ["Edit > Notebook settings", "Runtime > Change runtime type", "View > Cell output", "Tools > Command palette"], correct: 1 },
+        { text: "Dalam bahasa C++, berapakah ukuran (dalam byte) dari tipe data 'char' menurut standar C++11 dan umumnya pada arsitektur modern?", options: ["1 byte", "2 byte", "4 byte", "Tergantung compiler"], correct: 0 },
+        { text: "Apa perbedaan utama antara operator logika && dengan operator bitwise & pada C++ ketika digunakan pada nilai integer?", options: ["&& hanya untuk tipe bool, & untuk semua tipe", "&& menghasilkan nilai 0/1 berdasarkan short-circuit, & melakukan operasi bit per bit", "Tidak ada perbedaan", "& lebih cepat dari &&"], correct: 1 },
+        { text: "Pernyataan yang benar tentang generasi kelima komputer (awal 1980-an hingga sekarang) adalah?", options: ["Menggunakan teknologi IC skala besar (LSI)", "Menggunakan konsep kecerdasan buatan (AI) dan pemrosesan paralel", "Komponen utama adalah tabung vakum", "Memperkenalkan sistem operasi GUI pertama"], correct: 1 },
+        { text: "Dalam mekanisme token passing pada jaringan Fiber Distributed Data Interface (FDDI), berapa jumlah token yang aktif secara default?", options: ["Satu token", "Dua token (synchronous dan asynchronous)", "Multiple token (hingga 3)", "Token tidak digunakan di FDDI"], correct: 1 },
+        { text: "Dari simbol flowchart, jajar genjang (parallelogram) digunakan untuk?", options: ["Proses perhitungan", "Input / Output", "Percabangan", "Subroutine"], correct: 1 },
+        { text: "Perhatikan potongan kode C++: int a = 10, b = 20; if(a = b) cout << \"X\"; else cout << \"Y\"; Apa yang tercetak?", options: ["X", "Y", "Error kompilasi", "Tidak mencetak apa-apa"], correct: 0 },
+        { text: "Hasil dari operasi bitwise (7 << 2) pada C++ adalah?", options: ["28", "14", "1", "21"], correct: 0 },
+        { text: "Pada tahap Data Visualization, teknik yang paling tepat untuk melihat distribusi data numerik secara kontinu adalah?", options: ["Bar chart", "Scatter plot", "Histogram", "Pie chart"], correct: 2 },
+        { text: "Perbedaan antara pseudocode dan flowchart adalah?", options: ["Pseudocode berbasis teks terstruktur, flowchart berbasis simbol grafis", "Flowchart hanya untuk algoritma kecil", "Pseudocode tidak memiliki standar", "Tidak ada perbedaan signifikan"], correct: 0 },
+        { text: "Pernyataan yang BENAR tentang topologi bus?", options: ["Mudah diimplementasikan dan hemat kabel, tetapi jika backbone putus seluruh jaringan terhenti", "Memiliki performa terbaik untuk area luas", "Menggunakan switch sentral", "Memerlukan token passing untuk menghindari collision"], correct: 0 },
+        { text: "Dalam C++, tipe data char jika dideklarasikan sebagai unsigned char, range nilai yang valid adalah?", options: ["-128 s/d 127", "0 s/d 255", "0 s/d 65535", "-32768 s/d 32767"], correct: 1 },
+        { text: "Salah satu menu di Google Colab yang digunakan untuk menjalankan seluruh kode di notebook (termasuk semua sel) adalah?", options: ["Runtime > Run all", "Cell > Run all", "File > Save and run", "Tools > Run all"], correct: 0 },
+        { text: "Komputer generasi pertama menggunakan komponen memori utama berupa?", options: ["Magnetic core memory", "Delay line memory atau tabung Williams", "SRAM", "Flash memory"], correct: 1 },
+        { text: "Apa output dari program C++ berikut: int x = 5; int y = 3; cout << (x | y);", options: ["7", "1", "8", "6"], correct: 0 },
+        { text: "Simbol flowchart yang berbentuk oval (ellipse) menandakan?", options: ["Terminal (START / STOP)", "Proses aritmatika", "Keputusan", "Konektor halaman"], correct: 0 },
+        { text: "Dalam struktur pseudocode, bagian IMPLEMENTASI biasanya berisi?", options: ["Deklarasi konstanta dan variabel", "Langkah-langkah algoritma secara berurutan", "Judul program", "Komentar"], correct: 1 },
+        { text: "Apa hasil evaluasi ekspresi logika: !( (7>3) && (2 != 3) ) ?", options: ["false", "true", "0", "1"], correct: 0 },
+        { text: "Pada topologi Tree (pohon) yang merupakan turunan dari topologi Star-Bus, keuntungan utamanya adalah?", options: ["Redundansi tinggi", "Ekspansi mudah dan hierarkis", "Tidak ada single point of failure", "Kecepatan sangat tinggi"], correct: 1 },
+        { text: "Manakah yang merupakan contoh operator bitwise shift kiri dalam C++ yang mengakibatkan overflow tidak terdefinisi jika nilai terlalu besar?", options: ["<<", ">>", ">>>", "~"], correct: 0 },
+        { text: "Dari segi sejarah komputer, mikroprosesor Intel 4004 menjadi ciri utama generasi ke-...", options: ["Generasi 2", "Generasi 3", "Generasi 4", "Generasi 5"], correct: 2 },
+        { text: "Tipe data char pada C++ dapat menyimpan karakter ASCII. Jika kita melakukan operasi arithmetic: char ch = 'D'; ch = ch + 1; maka ch sekarang menyimpan karakter?", options: ["E", "C", "69", "Error"], correct: 0 }
+    ];
+    const TOTAL_QS = QUESTIONS.length; // = 35
+
+    // state
+    let userAnswers = new Array(TOTAL_QS).fill(null);      // menyimpan index jawaban (0-3)
+    let currentPage = 0;   // 0-index
+    let currentPlayerName = "";
+
+    // DOM elements
+    const container = document.getElementById("questionPageContainer");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const pageIndicator = document.getElementById("pageIndicator");
+    const progressFill = document.getElementById("progressFill");
+    const previewScoreSpan = document.getElementById("previewScore");
+    const finalSubmitBtn = document.getElementById("finalSubmitBtn");
+    const submitMessageDiv = document.getElementById("submitMessage");
+    const leaderboardList = document.getElementById("leaderboardList");
+    const playerNameInput = document.getElementById("playerName");
+    const applyNameBtn = document.getElementById("applyNameBtn");
+
+    // Helper: hitung skor sementara
+    function computeCurrentScore() {
+        let correct = 0;
+        for (let i = 0; i < TOTAL_QS; i++) {
+            if (userAnswers[i] !== null && userAnswers[i] === QUESTIONS[i].correct) correct++;
+        }
+        return correct;
+    }
+
+    function updateScorePreview() {
+        const score = computeCurrentScore();
+        previewScoreSpan.innerText = `📊 Skor: ${score}/${TOTAL_QS}`;
+    }
+
+    // render soal berdasarkan currentPage
+    function renderCurrentQuestion() {
+        if (!container) return;
+        const q = QUESTIONS[currentPage];
+        const currentAnswer = userAnswers[currentPage];
+        const qNumber = currentPage + 1;
+
+        let optionsHtml = '';
+        q.options.forEach((opt, idx) => {
+            const letter = String.fromCharCode(65 + idx);
+            const isChecked = (currentAnswer === idx);
+            const selectedClass = isChecked ? 'selected' : '';
+            optionsHtml += `
+                <div class="opt-item ${selectedClass}" data-opt-index="${idx}">
+                    <input type="radio" name="pageQuestion" value="${idx}" id="opt_${idx}" ${isChecked ? 'checked' : ''} class="opt-radio">
+                    <span class="opt-letter">${letter}</span>
+                    <span class="opt-text">${escapeHtml(opt)}</span>
+                </div>
+            `;
+        });
+
+        const html = `
+            <div class="question-page">
+                <div class="q-counter">Soal ${qNumber} / ${TOTAL_QS}</div>
+                <div class="question-text">${escapeHtml(q.text)}</div>
+                <div class="options-list" id="optionsList">
+                    ${optionsHtml}
+                </div>
+            </div>
+        `;
+        container.innerHTML = html;
+
+        // attach event listeners ke radio & div
+        const radioBtns = document.querySelectorAll('input[name="pageQuestion"]');
+        radioBtns.forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                const selectedVal = parseInt(e.target.value);
+                userAnswers[currentPage] = selectedVal;
+                updateScorePreview();
+                updateProgressBar();
+                // update tampilan selected class
+                document.querySelectorAll('.opt-item').forEach(item => item.classList.remove('selected'));
+                const parentDiv = e.target.closest('.opt-item');
+                if(parentDiv) parentDiv.classList.add('selected');
+            });
+        });
+
+        // klik pada div juga bisa memilih radio
+        const optDivs = document.querySelectorAll('.opt-item');
+        optDivs.forEach(div => {
+            div.addEventListener('click', (e) => {
+                const radio = div.querySelector('input[type="radio"]');
+                if (radio && !radio.checked) {
+                    radio.checked = true;
+                    // trigger change
+                    const changeEvent = new Event('change', { bubbles: true });
+                    radio.dispatchEvent(changeEvent);
+                }
+            });
+        });
+    }
+
+    function escapeHtml(str) {
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    function updateProgressBar() {
+        const answeredCount = userAnswers.filter(a => a !== null).length;
+        const percent = (answeredCount / TOTAL_QS) * 100;
+        progressFill.style.width = `${percent}%`;
+        // update indikator halaman
+        pageIndicator.innerText = `Halaman ${currentPage+1} / ${TOTAL_QS}`;
+        // update navigasi tombol
+        prevBtn.disabled = (currentPage === 0);
+        nextBtn.disabled = (currentPage === TOTAL_QS - 1);
+    }
+
+    function goToPrevPage() {
+        if (currentPage > 0) {
+            currentPage--;
+            renderCurrentQuestion();
+            updateProgressBar();
+        }
+    }
+
+    function goToNextPage() {
+        if (currentPage < TOTAL_QS - 1) {
+            currentPage++;
+            renderCurrentQuestion();
+            updateProgressBar();
+        }
+    }
+
+    // Leaderboard functions (tanpa reset)
+    function loadLeaderboard() {
+        const stored = localStorage.getItem("informatika_advanced_lb");
+        if (!stored) return [];
+        try {
+            return JSON.parse(stored);
+        } catch(e) { return []; }
+    }
+
+    function saveLeaderboard(data) {
+        localStorage.setItem("informatika_advanced_lb", JSON.stringify(data));
+    }
+
+    function addScoreToLeaderboard(name, score) {
+        if (!name || name.trim() === "") name = "Anonim";
+        let lb = loadLeaderboard();
+        lb.push({ name: name.trim().substring(0,20), score: score, timestamp: Date.now() });
+        // sort descending by score
+        lb.sort((a,b) => b.score - a.score);
+        // batasi ke 50 saja agar ringan
+        if (lb.length > 50) lb = lb.slice(0,50);
+        saveLeaderboard(lb);
+        renderLeaderboard();
+    }
+
+    function renderLeaderboard() {
+        const lb = loadLeaderboard();
+        if (!leaderboardList) return;
+        if (lb.length === 0) {
+            leaderboardList.innerHTML = '<li class="empty-leader">✨ Belum ada skor ✨</li>';
+            return;
+        }
+        const topList = lb.slice(0, 12);
+        leaderboardList.innerHTML = topList.map((entry, idx) => `
+            <li>
+                <span class="rank-name">${idx+1}. ${escapeHtml(entry.name)}</span>
+                <span class="rank-score">${entry.score}/${TOTAL_QS}</span>
+            </li>
+        `).join('');
+    }
+
+    // submit final
+    function submitFinal() {
+        let nama = playerNameInput.value.trim();
+        if (nama === "") {
+            submitMessageDiv.innerHTML = '<span style="background:#b91c1c80; padding:0.3rem 1rem; border-radius:40px;">⚠️ Masukkan nama terlebih dahulu!</span>';
+            return;
+        }
+        const finalScore = computeCurrentScore();
+        addScoreToLeaderboard(nama, finalScore);
+        submitMessageDiv.innerHTML = `<span style="background:#05966980; padding:0.4rem 1.2rem; border-radius:40px;">✅ Skor ${finalScore}/${TOTAL_QS} tersimpan! Peringkat diperbarui.</span>`;
+        // simpan nama ke localStorage untuk kenyamanan
+        localStorage.setItem("last_player_name_informatika", nama);
+        updateScorePreview();
+        setTimeout(() => {
+            submitMessageDiv.innerHTML = '';
+        }, 3000);
+    }
+
+    // event listeners
+    prevBtn.addEventListener("click", goToPrevPage);
+    nextBtn.addEventListener("click", goToNextPage);
+    finalSubmitBtn.addEventListener("click", submitFinal);
+    applyNameBtn.addEventListener("click", () => {
+        const name = playerNameInput.value.trim();
+        if(name) {
+            localStorage.setItem("last_player_name_informatika", name);
+            submitMessageDiv.innerHTML = `<span style="background:#1e3a8a80; padding:0.3rem 1rem; border-radius:40px;">Nama disimpan: ${escapeHtml(name)}</span>`;
+            setTimeout(() => submitMessageDiv.innerHTML = '', 1800);
+        } else {
+            alert("Masukkan nama terlebih dahulu");
+        }
+    });
+
+    // load nama terakhir
+    const savedName = localStorage.getItem("last_player_name_informatika");
+    if(savedName) playerNameInput.value = savedName;
+
+    // inisialisasi
+    renderCurrentQuestion();
+    updateProgressBar();
+    updateScorePreview();
+    renderLeaderboard();
+</script>
+</body>
+</html>
